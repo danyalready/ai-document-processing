@@ -3,7 +3,9 @@
     "private": true,
     "scripts": {
         "dev": "turbo run dev",
-        "build": "turbo run build"
+        "build": "turbo run build",
+        "dev:web": "pnpm --filter web dev",
+        "dev:api": "pnpm --filter api start:dev"
     },
     "devDependencies": {
         "tsx": "^4.21.0",
