@@ -2,7 +2,12 @@
     "name": "ai-document-processing",
     "private": true,
     "scripts": {
-        "dev": "echo root",
-        "build": "echo build"
+        "dev": "turbo run dev",
+        "build": "turbo run build"
+    },
+    "devDependencies": {
+        "tsx": "^4.21.0",
+        "turbo": "^2.9.9",
+        "typescript": "^6.0.3"
     }
 }
