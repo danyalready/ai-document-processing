@@ -1,4 +1,16 @@
-import { Controller, Get } from "@nestjs/common";
+import {
+    Controller,
+    Get,
+    Post,
+    UploadedFile,
+    UseInterceptors,
+} from "@nestjs/common";
+import { join } from "path";
+
+import { FileInterceptor } from "@nestjs/platform-express";
+import { diskStorage } from "multer";
+
+import { extname } from "path";
 
 import { DocumentService } from "./document.service";
 
@@ -9,5 +21,26 @@ export class DocumentController {
     @Get()
     findAll() {
         return this.documentService.findAll();
+    }
+
+    @Post("upload")
+    @UseInterceptors(
+        FileInterceptor("file", {
+            storage: diskStorage({
+                destination: join(__dirname, "..", "..", "..", "..", "uploads"),
+
+                filename: (_, file, callback) => {
+                    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+
+                    callback(
+                        null,
+                        `${uniqueName}${extname(file.originalname)}`,
+                    );
+                },
+            }),
+        }),
+    )
+    uploadFile(@UploadedFile() file: Express.Multer.File) {
+        return this.documentService.create(file);
     }
 }
