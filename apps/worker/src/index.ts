@@ -6,6 +6,7 @@ import IORedis from "ioredis";
 import { AppDataSource } from "./data-source";
 import { DocumentEntity } from "./document.entity";
 import { DocumentStatus } from "./document-status.enum";
+import { extractTextFromPdf } from "./extract-text";
 
 async function bootstrap() {
     await AppDataSource.initialize();
@@ -30,25 +31,39 @@ async function bootstrap() {
                 id: job.data.documentId,
             });
 
-            if (!document) {
-                throw new Error("Document not found");
+            try {
+                if (!document) {
+                    throw new Error("Document not found");
+                }
+
+                document.status = DocumentStatus.PROCESSING;
+
+                await repository.save(document);
+
+                const extractedText = await extractTextFromPdf(
+                    document.storagePath,
+                );
+
+                document.extractedText = extractedText;
+
+                document.status = DocumentStatus.COMPLETED;
+
+                await repository.save(document);
+
+                console.log("Document processed");
+            } catch (error) {
+                console.error(error);
+
+                if (document) {
+                    document.status = DocumentStatus.FAILED;
+
+                    await AppDataSource.getRepository(DocumentEntity).save(
+                        document,
+                    );
+                }
+
+                throw error;
             }
-
-            document.status = DocumentStatus.PROCESSING;
-
-            await repository.save(document);
-
-            await new Promise((resolve) => setTimeout(resolve, 5000));
-
-            document.status = DocumentStatus.COMPLETED;
-
-            document.extractedText = "Fake extracted PDF text";
-
-            document.aiSummary = "Fake AI summary";
-
-            await repository.save(document);
-
-            console.log("Document processed");
         },
 
         {
