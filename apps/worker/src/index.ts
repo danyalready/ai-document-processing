@@ -1,3 +1,4 @@
+import "dotenv/config";
 import "reflect-metadata";
 
 import { Worker } from "bullmq";
@@ -7,6 +8,7 @@ import { AppDataSource } from "./data-source";
 import { DocumentEntity } from "./document.entity";
 import { DocumentStatus } from "./document-status.enum";
 import { extractTextFromPdf } from "./extract-text";
+import { summarizeText } from "./summarize";
 
 async function bootstrap() {
     await AppDataSource.initialize();
@@ -45,6 +47,10 @@ async function bootstrap() {
                 );
 
                 document.extractedText = extractedText;
+
+                const summary = await summarizeText(extractedText);
+
+                if (summary) document.aiSummary = summary;
 
                 document.status = DocumentStatus.COMPLETED;
 
