@@ -3,34 +3,67 @@ import "reflect-metadata";
 import { Worker } from "bullmq";
 import IORedis from "ioredis";
 
-const connection = new IORedis({
-    host: "localhost",
-    port: 6379,
-    maxRetriesPerRequest: null,
-});
+import { AppDataSource } from "./data-source";
+import { DocumentEntity } from "./document.entity";
+import { DocumentStatus } from "./document-status.enum";
 
-const worker = new Worker(
-    "document-processing",
+async function bootstrap() {
+    await AppDataSource.initialize();
 
-    async (job) => {
-        console.log("Processing job:", job.id);
-        console.log(job.data);
+    console.log("Worker database connected");
 
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+    const connection = new IORedis({
+        host: "localhost",
+        port: 6379,
+        maxRetriesPerRequest: null,
+    });
 
-        console.log("Job completed");
-    },
+    const worker = new Worker(
+        "document-processing",
 
-    {
-        connection,
-    },
-);
+        async (job) => {
+            console.log("Processing job:", job.id);
 
-worker.on("completed", (job) => {
-    console.log(`Job ${job.id} completed`);
-});
+            const repository = AppDataSource.getRepository(DocumentEntity);
 
-worker.on("failed", (job, error) => {
-    console.error(`Job ${job?.id} failed`);
-    console.error(error);
-});
+            const document = await repository.findOneBy({
+                id: job.data.documentId,
+            });
+
+            if (!document) {
+                throw new Error("Document not found");
+            }
+
+            document.status = DocumentStatus.PROCESSING;
+
+            await repository.save(document);
+
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+
+            document.status = DocumentStatus.COMPLETED;
+
+            document.extractedText = "Fake extracted PDF text";
+
+            document.aiSummary = "Fake AI summary";
+
+            await repository.save(document);
+
+            console.log("Document processed");
+        },
+
+        {
+            connection,
+        },
+    );
+
+    worker.on("completed", (job) => {
+        console.log(`Job ${job.id} completed`);
+    });
+
+    worker.on("failed", (job, error) => {
+        console.error(`Job ${job?.id} failed`);
+        console.error(error);
+    });
+}
+
+bootstrap();
