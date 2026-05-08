@@ -5,7 +5,8 @@
         "dev": "turbo run dev",
         "build": "turbo run build",
         "dev:web": "pnpm --filter web dev",
-        "dev:api": "pnpm --filter api start:dev"
+        "dev:api": "pnpm --filter api start:dev",
+        "dev:worker": "pnpm --filter worker dev"
     },
     "devDependencies": {
         "tsx": "^4.21.0",
