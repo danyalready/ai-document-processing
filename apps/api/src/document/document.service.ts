@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { InjectQueue } from "@nestjs/bullmq";
+import { Queue } from "bullmq";
 
 import { DocumentEntity } from "./entities/document.entity";
 import { DocumentStatus } from "./document-status.enum";
@@ -10,6 +12,9 @@ export class DocumentService {
     constructor(
         @InjectRepository(DocumentEntity)
         private readonly documentRepository: Repository<DocumentEntity>,
+
+        @InjectQueue("document-processing")
+        private readonly documentQueue: Queue,
     ) {}
 
     async findAll() {
@@ -28,6 +33,12 @@ export class DocumentService {
             status: DocumentStatus.UPLOADED,
         });
 
-        return this.documentRepository.save(document);
+        const savedDocument = await this.documentRepository.save(document);
+
+        await this.documentQueue.add("process-document", {
+            documentId: savedDocument.id,
+        });
+
+        return savedDocument;
     }
 }
