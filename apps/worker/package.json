@@ -11,6 +11,7 @@
     "license": "ISC",
     "type": "module",
     "dependencies": {
+        "@app/shared": "workspace:*",
         "bullmq": "^5.76.6",
         "dotenv": "^17.4.2",
         "ioredis": "^5.10.1",

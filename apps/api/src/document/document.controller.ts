@@ -6,10 +6,8 @@ import {
     UseInterceptors,
 } from "@nestjs/common";
 import { join } from "path";
-
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
-
 import { extname } from "path";
 
 import { DocumentService } from "./document.service";

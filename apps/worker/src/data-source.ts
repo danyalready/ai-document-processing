@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 import { DataSource } from "typeorm";
 
-import { DocumentEntity } from "./document.entity";
+import { DocumentEntity } from "@app/shared";
 
 export const AppDataSource = new DataSource({
     type: "postgres",

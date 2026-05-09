@@ -4,8 +4,7 @@ import { Repository } from "typeorm";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Queue } from "bullmq";
 
-import { DocumentEntity } from "./entities/document.entity";
-import { DocumentStatus } from "./document-status.enum";
+import { DocumentEntity, DocumentStatus } from "@app/shared";
 
 @Injectable()
 export class DocumentService {

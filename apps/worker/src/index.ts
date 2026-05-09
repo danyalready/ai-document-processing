@@ -4,9 +4,9 @@ import "reflect-metadata";
 import { Worker } from "bullmq";
 import IORedis from "ioredis";
 
+import { DocumentEntity, DocumentStatus } from "@app/shared";
+
 import { AppDataSource } from "./data-source";
-import { DocumentEntity } from "./document.entity";
-import { DocumentStatus } from "./document-status.enum";
 import { extractTextFromPdf } from "./extract-text";
 import { summarizeText } from "./summarize";
 

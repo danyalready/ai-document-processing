@@ -3,11 +3,15 @@
         "target": "ES2022",
         "module": "commonjs",
         "strict": true,
-        "esModuleInterop": true,
+
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
+
+        "declaration": true,
+
         "rootDir": "src",
         "outDir": "dist"
     },
+
     "include": ["src"]
 }
