@@ -5,7 +5,6 @@ import {
     UploadedFile,
     UseInterceptors,
 } from "@nestjs/common";
-import { join } from "path";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { extname } from "path";
@@ -25,7 +24,7 @@ export class DocumentController {
     @UseInterceptors(
         FileInterceptor("file", {
             storage: diskStorage({
-                destination: join(__dirname, "..", "..", "..", "..", "uploads"),
+                destination: "/app/uploads",
 
                 filename: (_, file, callback) => {
                     const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;

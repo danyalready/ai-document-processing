@@ -16,8 +16,8 @@ async function bootstrap() {
     console.log("Worker database connected");
 
     const connection = new IORedis({
-        host: "localhost",
-        port: 6379,
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
         maxRetriesPerRequest: null,
     });
 
