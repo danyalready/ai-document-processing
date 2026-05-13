@@ -3,8 +3,10 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Queue } from "bullmq";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { DocumentEntity, DocumentStatus } from "@app/shared";
+import { s3 } from "../storage/s3";
 
 @Injectable()
 export class DocumentService {
@@ -25,10 +27,20 @@ export class DocumentService {
     }
 
     async create(file: Express.Multer.File) {
+        const objectKey = `${Date.now()}-${file.originalname}`;
+        await s3.send(
+            new PutObjectCommand({
+                Bucket: "documents",
+                Key: objectKey,
+                Body: file.buffer,
+                ContentType: file.mimetype,
+            }),
+        );
+
         const document = this.documentRepository.create({
             originalName: file.originalname,
             mimeType: file.mimetype,
-            storagePath: file.path,
+            storagePath: objectKey,
             status: DocumentStatus.UPLOADED,
         });
 

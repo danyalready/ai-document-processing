@@ -9,6 +9,7 @@ import { DocumentEntity, DocumentStatus } from "@app/shared";
 import { AppDataSource } from "./data-source";
 import { extractTextFromPdf } from "./extract-text";
 import { summarizeText } from "./summarize";
+import { downloadFile } from "./download-file";
 
 async function bootstrap() {
     await AppDataSource.initialize();
@@ -57,9 +58,9 @@ async function bootstrap() {
                     }),
                 );
 
-                const extractedText = await extractTextFromPdf(
-                    document.storagePath,
-                );
+                const fileBuffer = await downloadFile(document.storagePath);
+
+                const extractedText = await extractTextFromPdf(fileBuffer);
 
                 document.extractedText = extractedText;
 
