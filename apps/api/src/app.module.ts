@@ -3,6 +3,7 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { BullModule } from "@nestjs/bullmq";
 
+import { AppController } from "./app.controller";
 import { DocumentModule } from "./document/document.module";
 
 @Module({
@@ -27,5 +28,6 @@ import { DocumentModule } from "./document/document.module";
 
         DocumentModule,
     ],
+    controllers: [AppController],
 })
 export class AppModule {}
