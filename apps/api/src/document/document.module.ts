@@ -6,6 +6,8 @@ import { DocumentEntity } from "@app/shared";
 
 import { DocumentService } from "./document.service";
 import { DocumentController } from "./document.controller";
+import { DocumentGateway } from "./document.gateway";
+import { DocumentEventsService } from "./document-events.service";
 
 @Module({
     imports: [
@@ -13,6 +15,6 @@ import { DocumentController } from "./document.controller";
         BullModule.registerQueue({ name: "document-processing" }),
     ],
     controllers: [DocumentController],
-    providers: [DocumentService],
+    providers: [DocumentService, DocumentGateway, DocumentEventsService],
 })
 export class DocumentModule {}

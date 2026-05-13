@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { socket } from "@/lib/socket";
 import { getDocuments, uploadDocument } from "@/lib/api";
 
 type DocumentItem = {
@@ -26,9 +27,11 @@ export default function HomePage() {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         loadDocuments();
 
-        const interval = setInterval(loadDocuments, 3000);
+        socket.on("document.updated", () => loadDocuments());
 
-        return () => clearInterval(interval);
+        return () => {
+            socket.off("document.updated");
+        };
     }, []);
 
     async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {

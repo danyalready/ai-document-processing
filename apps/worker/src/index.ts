@@ -21,6 +21,12 @@ async function bootstrap() {
         maxRetriesPerRequest: null,
     });
 
+    const publisher = new IORedis({
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+        maxRetriesPerRequest: null,
+    });
+
     const worker = new Worker(
         "document-processing",
 
@@ -42,6 +48,15 @@ async function bootstrap() {
 
                 await repository.save(document);
 
+                await publisher.publish(
+                    "document-events",
+
+                    JSON.stringify({
+                        id: document.id,
+                        status: document.status,
+                    }),
+                );
+
                 const extractedText = await extractTextFromPdf(
                     document.storagePath,
                 );
@@ -55,6 +70,16 @@ async function bootstrap() {
                 document.status = DocumentStatus.COMPLETED;
 
                 await repository.save(document);
+
+                await publisher.publish(
+                    "document-events",
+
+                    JSON.stringify({
+                        id: document.id,
+                        status: document.status,
+                        aiSummary: document.aiSummary,
+                    }),
+                );
 
                 console.log("Document processed");
             } catch (error) {
