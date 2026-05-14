@@ -2,11 +2,13 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
 
 import { DocumentStatus } from "./document-status.enum";
+import { UserEntity } from "./user.entity";
 
 @Entity("documents")
 export class DocumentEntity {
@@ -21,6 +23,9 @@ export class DocumentEntity {
 
     @Column({ type: "varchar" })
     storagePath!: string;
+
+    @ManyToOne(() => UserEntity)
+    user!: UserEntity;
 
     @Column({
         type: "enum",

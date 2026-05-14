@@ -8,5 +8,8 @@
     },
     "dependencies": {
         "typeorm": "^0.3.28"
+    },
+    "devDependencies": {
+        "@types/node": "^25.7.0"
     }
 }

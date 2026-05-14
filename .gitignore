@@ -6,3 +6,4 @@ coverage
 pnpm-lock.yaml
 .DS_Store
 uploads
+.turbo

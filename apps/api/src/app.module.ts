@@ -5,6 +5,7 @@ import { BullModule } from "@nestjs/bullmq";
 
 import { AppController } from "./app.controller";
 import { DocumentModule } from "./document/document.module";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
     imports: [
@@ -27,6 +28,8 @@ import { DocumentModule } from "./document/document.module";
         }),
 
         DocumentModule,
+
+        AuthModule,
     ],
     controllers: [AppController],
 })

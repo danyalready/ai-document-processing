@@ -10,7 +10,9 @@
         "declaration": true,
 
         "rootDir": "src",
-        "outDir": "dist"
+        "outDir": "dist",
+
+        "types": ["node"]
     },
 
     "include": ["src"]
