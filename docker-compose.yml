@@ -3,12 +3,15 @@ services:
         image: postgres:16
         container_name: ai-doc-postgres
         restart: unless-stopped
+
         environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_DB: ai_docs
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
+
         ports:
-            - "5432:5432"
+            - "${POSTGRES_HOST_PORT}:${POSTGRES_PORT}"
+
         volumes:
             - postgres_data:/var/lib/postgresql/data
 
@@ -16,23 +19,23 @@ services:
         image: redis:7
         container_name: ai-doc-redis
         restart: unless-stopped
+
         ports:
-            - "6379:6379"
+            - "${REDIS_HOST_PORT}:${REDIS_PORT}"
 
     minio:
         image: minio/minio
-
         container_name: ai-doc-minio
 
-        command: server /data --console-address ":9001"
+        command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
 
         environment:
-            MINIO_ROOT_USER: minio
-            MINIO_ROOT_PASSWORD: minio123
+            MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+            MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
 
         ports:
-            - "9000:9000"
-            - "9001:9001"
+            - ${MINIO_PORT}:${MINIO_PORT}
+            - ${MINIO_CONSOLE_PORT}:${MINIO_CONSOLE_PORT}
 
         volumes:
             - minio_data:/data
@@ -45,17 +48,24 @@ services:
             dockerfile: apps/api/Dockerfile
 
         ports:
-            - "3001:3001"
+            - "${API_HOST_PORT}:${API_PORT}"
 
         environment:
-            PORT: 3001
+            PORT: ${API_PORT}
 
-            DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ai_docs
+            DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}
 
             REDIS_HOST: redis
-            REDIS_PORT: 6379
+            REDIS_PORT: ${REDIS_PORT}
 
-            JWT_SECRET: supersecret
+            MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+            MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+            MINIO_PORT: ${MINIO_PORT}
+            MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+
+            JWT_SECRET: ${JWT_SECRET}
+
+            OPENAI_API_KEY: ${OPENAI_API_KEY}
 
         depends_on:
             - postgres
@@ -69,11 +79,15 @@ services:
             dockerfile: apps/worker/Dockerfile
 
         environment:
-            # protocol://username:password@host:port/database
-            DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ai_docs
+            DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}
 
             REDIS_HOST: redis
-            REDIS_PORT: 6379
+            REDIS_PORT: ${REDIS_PORT}
+
+            MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+            MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+            MINIO_PORT: ${MINIO_PORT}
+            MINIO_ENDPOINT: ${MINIO_ENDPOINT}
 
         depends_on:
             - postgres
