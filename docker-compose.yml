@@ -89,6 +89,8 @@ services:
             MINIO_PORT: ${MINIO_PORT}
             MINIO_ENDPOINT: ${MINIO_ENDPOINT}
 
+            OPENAI_API_KEY: ${OPENAI_API_KEY}
+
         depends_on:
             - postgres
             - redis

@@ -5,12 +5,15 @@ import { InjectQueue } from "@nestjs/bullmq";
 import { Queue } from "bullmq";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
-import { DocumentEntity, DocumentStatus } from "@app/shared";
+import { DocumentEntity, DocumentStatus, UserEntity } from "@app/shared";
 import { s3 } from "../storage/s3";
 
 @Injectable()
 export class DocumentService {
     constructor(
+        @InjectRepository(UserEntity)
+        private readonly userRepository: Repository<UserEntity>,
+
         @InjectRepository(DocumentEntity)
         private readonly documentRepository: Repository<DocumentEntity>,
 
@@ -18,15 +21,16 @@ export class DocumentService {
         private readonly documentQueue: Queue,
     ) {}
 
-    async findAll() {
+    async findAll(userId: string) {
         return this.documentRepository.find({
-            order: {
-                createdAt: "DESC",
-            },
+            where: { id: userId },
+            order: { createdAt: "DESC" },
         });
     }
 
-    async create(file: Express.Multer.File) {
+    async create(file: Express.Multer.File, userId: string) {
+        const user = await this.userRepository.findOneBy({ id: userId });
+
         const objectKey = `${Date.now()}-${file.originalname}`;
         await s3.send(
             new PutObjectCommand({
@@ -42,6 +46,7 @@ export class DocumentService {
             mimeType: file.mimetype,
             storagePath: objectKey,
             status: DocumentStatus.UPLOADED,
+            user,
         });
 
         const savedDocument = await this.documentRepository.save(document);
