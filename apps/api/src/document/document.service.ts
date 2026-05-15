@@ -23,7 +23,7 @@ export class DocumentService {
 
     async findAll(userId: string) {
         return this.documentRepository.find({
-            where: { id: userId },
+            where: { user: { id: userId } },
             order: { createdAt: "DESC" },
         });
     }

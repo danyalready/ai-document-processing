@@ -1,5 +1,43 @@
 const API_URL = "http://localhost:3001";
 
+function getToken() {
+    return localStorage.getItem("token");
+}
+
+export async function register(email: string, password: string) {
+    const response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            email,
+            password,
+        }),
+    });
+
+    if (!response.ok) {
+        throw new Error("Registration failed");
+    }
+
+    return response.json();
+}
+
+export async function login(email: string, password: string) {
+    const response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            email,
+            password,
+        }),
+    });
+
+    if (!response.ok) {
+        throw new Error("Login failed");
+    }
+
+    return response.json();
+}
+
 export async function uploadDocument(file: File) {
     const formData = new FormData();
 
@@ -7,6 +45,7 @@ export async function uploadDocument(file: File) {
 
     const response = await fetch(`${API_URL}/documents/upload`, {
         method: "POST",
+        headers: { Authorization: `Bearer ${getToken()}` },
         body: formData,
     });
 
@@ -19,6 +58,7 @@ export async function uploadDocument(file: File) {
 
 export async function getDocuments() {
     const response = await fetch(`${API_URL}/documents`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
         cache: "no-store",
     });
 
