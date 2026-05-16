@@ -10,4 +10,6 @@ RUN npm install -g pnpm
 
 RUN pnpm install
 
-CMD ["pnpm", "--filter", "worker", "dev"]
+RUN pnpm -r build
+
+CMD ["node", "apps/worker/dist/index.js"]

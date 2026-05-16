@@ -10,6 +10,8 @@ RUN npm install -g pnpm
 
 RUN pnpm install
 
+RUN pnpm -r build
+
 EXPOSE 3001
 
-CMD ["pnpm", "--filter", "api", "start:dev"]
+CMD ["node", "apps/api/dist/main.js"]
