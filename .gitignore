@@ -3,7 +3,6 @@ dist
 .next
 .env
 coverage
-pnpm-lock.yaml
 .DS_Store
 uploads
 .turbo
