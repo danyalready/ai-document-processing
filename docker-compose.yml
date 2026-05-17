@@ -95,6 +95,19 @@ services:
             - postgres
             - redis
 
+    web:
+        container_name: ai-doc-web
+
+        build:
+            context: .
+            dockerfile: apps/web/Dockerfile
+
+        ports:
+            - "${WEB_HOST_PORT}:${WEB_PORT}"
+
+        depends_on:
+            - api
+
 volumes:
     postgres_data:
     minio_data:
