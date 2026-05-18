@@ -105,6 +105,9 @@ services:
         ports:
             - "${WEB_HOST_PORT}:${WEB_PORT}"
 
+        environment:
+            NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+
         depends_on:
             - api
 
