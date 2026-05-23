@@ -9,8 +9,8 @@ services:
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             POSTGRES_DB: ${POSTGRES_DB}
 
-        ports:
-            - "${POSTGRES_HOST_PORT}:${POSTGRES_PORT}"
+        expose:
+            - ${POSTGRES_PORT}
 
         volumes:
             - postgres_data:/var/lib/postgresql/data
@@ -23,6 +23,9 @@ services:
         ports:
             - "${REDIS_HOST_PORT}:${REDIS_PORT}"
 
+        expose:
+            - ${REDIS_PORT}
+
     minio:
         image: minio/minio
         container_name: ai-doc-minio
@@ -33,9 +36,8 @@ services:
             MINIO_ROOT_USER: ${MINIO_ROOT_USER}
             MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
 
-        ports:
-            - ${MINIO_PORT}:${MINIO_PORT}
-            - ${MINIO_CONSOLE_PORT}:${MINIO_CONSOLE_PORT}
+        expose:
+            - ${MINIO_PORT}
 
         volumes:
             - minio_data:/data
@@ -46,9 +48,6 @@ services:
         build:
             context: .
             dockerfile: apps/api/Dockerfile
-
-        ports:
-            - "${API_HOST_PORT}:${API_PORT}"
 
         environment:
             PORT: ${API_PORT}
@@ -66,6 +65,9 @@ services:
             JWT_SECRET: ${JWT_SECRET}
 
             OPENAI_API_KEY: ${OPENAI_API_KEY}
+
+        expose:
+            - ${API_PORT}
 
         depends_on:
             - postgres
@@ -104,12 +106,12 @@ services:
             args:
                 NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
 
-        ports:
-            - "${WEB_HOST_PORT}:${WEB_PORT}"
-
         environment:
             PORT: ${WEB_PORT}
             NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+
+        expose:
+            - ${WEB_PORT}
 
         depends_on:
             - api
