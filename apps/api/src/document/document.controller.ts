@@ -14,6 +14,8 @@ import { Request } from "express";
 import { DocumentService } from "./document.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 
+const MAX_UPLOAD_SIZE_BYTES = 50 * 1024 * 1024;
+
 @UseGuards(JwtAuthGuard)
 @Controller("documents")
 export class DocumentController {
@@ -25,7 +27,12 @@ export class DocumentController {
     }
 
     @Post("upload")
-    @UseInterceptors(FileInterceptor("file", { storage: memoryStorage() }))
+    @UseInterceptors(
+        FileInterceptor("file", {
+            storage: memoryStorage(),
+            limits: { fileSize: MAX_UPLOAD_SIZE_BYTES },
+        }),
+    )
     uploadFile(
         @UploadedFile() file: Express.Multer.File,
         @Req()
