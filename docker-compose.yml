@@ -12,6 +12,12 @@ services:
         expose:
             - ${POSTGRES_PORT}
 
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
         volumes:
             - postgres_data:/var/lib/postgresql/data
 
@@ -23,12 +29,19 @@ services:
         ports:
             - "${REDIS_HOST_PORT}:${REDIS_PORT}"
 
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
         expose:
             - ${REDIS_PORT}
 
     minio:
         image: minio/minio
         container_name: ai-doc-minio
+        restart: unless-stopped
 
         command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
 
@@ -44,6 +57,7 @@ services:
 
     api:
         container_name: ai-doc-api
+        restart: unless-stopped
 
         build:
             context: .
@@ -69,12 +83,25 @@ services:
         expose:
             - ${API_PORT}
 
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "node",
+                    "-e",
+                    "fetch('http://localhost:3001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+
         depends_on:
             - postgres
             - redis
 
     worker:
         container_name: ai-doc-worker
+        restart: unless-stopped
 
         build:
             context: .
@@ -99,6 +126,7 @@ services:
 
     web:
         container_name: ai-doc-web
+        restart: unless-stopped
 
         build:
             context: .
@@ -108,16 +136,31 @@ services:
 
         environment:
             PORT: ${WEB_PORT}
+            HOSTNAME: 0.0.0.0
             NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
 
         expose:
             - ${WEB_PORT}
+
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "node",
+                    "-e",
+                    "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+                ]
+            interval: 30s
+            timeout: 5s
+            retries: 3
 
         depends_on:
             - api
 
     nginx:
         image: nginx:stable-alpine
+        container_name: ai-doc-nginx
+        restart: unless-stopped
 
         ports:
             - "80:80"
@@ -128,8 +171,11 @@ services:
             - /etc/letsencrypt:/etc/letsencrypt
 
         depends_on:
-            - api
-            - web
+            api:
+                condition: service_healthy
+
+            web:
+                condition: service_healthy
 
 volumes:
     postgres_data:
