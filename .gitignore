@@ -1,8 +1,18 @@
+# dependencies
 node_modules
+
+# builds
 dist
 .next
-.env
 coverage
-.DS_Store
-uploads
+
+# env
+.env
+.env.*
+!.env.example
+
+# turbo
 .turbo
+
+# logs
+*.log

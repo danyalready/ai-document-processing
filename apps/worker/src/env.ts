@@ -1,11 +1,11 @@
-import path from "path";
-import dotenv from "dotenv";
+import * as path from "path";
+import * as dotenv from "dotenv";
 
 dotenv.config({
     path: path.resolve(
         process.cwd(),
         process.env.NODE_ENV === "production"
-            ? ".env.production.local"
-            : ".env.development.local",
+            ? "apps/worker/.env.production.local"
+            : "apps/worker/.env.development.local",
     ),
 });
