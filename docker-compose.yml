@@ -56,8 +56,6 @@ services:
 
         env_file:
             - ./apps/api/.env.production.local
-        environment:
-            - NODE_ENV=production
 
         expose:
             - ${API_PORT}
@@ -88,8 +86,6 @@ services:
 
         env_file:
             - ./apps/worker/.env.production.local
-        environment:
-            - NODE_ENV=production
 
         depends_on:
             - postgres
@@ -104,11 +100,6 @@ services:
             dockerfile: apps/web/Dockerfile
             args:
                 NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
-
-        # env_file:
-        #     - ./apps/worker/.env.production.local
-        environment:
-            - NODE_ENV=production
 
         expose:
             - ${WEB_PORT}
