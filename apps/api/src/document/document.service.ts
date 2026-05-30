@@ -1,12 +1,16 @@
-import { Injectable } from "@nestjs/common";
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Queue } from "bullmq";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { DocumentEntity, DocumentStatus, UserEntity } from "@app/shared";
-import { s3 } from "../storage/s3";
+import { AiService } from "../ai/ai.service";
+import { StorageService } from "../storage/storage.service";
 
 @Injectable()
 export class DocumentService {
@@ -19,6 +23,10 @@ export class DocumentService {
 
         @InjectQueue("document-processing")
         private readonly documentQueue: Queue,
+
+        private readonly storageService: StorageService,
+
+        private readonly aiService: AiService,
     ) {}
 
     async findAll(userId: string) {
@@ -32,14 +40,7 @@ export class DocumentService {
         const user = await this.userRepository.findOneBy({ id: userId });
 
         const objectKey = `${Date.now()}-${file.originalname}`;
-        await s3.send(
-            new PutObjectCommand({
-                Bucket: "documents",
-                Key: objectKey,
-                Body: file.buffer,
-                ContentType: file.mimetype,
-            }),
-        );
+        await this.storageService.upload(objectKey, file.buffer, file.mimetype);
 
         const document = this.documentRepository.create({
             originalName: file.originalname,
@@ -56,5 +57,30 @@ export class DocumentService {
         });
 
         return savedDocument;
+    }
+
+    async chat(documentId: string, question: string, userId: string) {
+        const document = await this.documentRepository.findOne({
+            where: {
+                id: documentId,
+                user: { id: userId },
+            },
+            relations: { user: true },
+        });
+
+        if (!document) {
+            throw new NotFoundException("Document not found");
+        }
+
+        if (!document.extractedText) {
+            throw new BadRequestException("Document not processed yet");
+        }
+
+        const answer = await this.aiService.askDocument(
+            document.extractedText,
+            question,
+        );
+
+        return { answer };
     }
 }

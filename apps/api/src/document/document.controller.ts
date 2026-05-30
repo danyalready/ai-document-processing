@@ -1,6 +1,8 @@
 import {
+    Body,
     Controller,
     Get,
+    Param,
     Post,
     Req,
     UploadedFile,
@@ -13,6 +15,7 @@ import { Request } from "express";
 
 import { DocumentService } from "./document.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { ChatDto } from "./dto/chat.dto";
 
 const MAX_UPLOAD_SIZE_BYTES = 50 * 1024 * 1024;
 
@@ -39,5 +42,23 @@ export class DocumentController {
         request: Request & { user: { userId: string } },
     ) {
         return this.documentService.create(file, request.user.userId);
+    }
+
+    @Post(":id/chat")
+    chat(
+        @Param("id")
+        documentId: string,
+
+        @Body()
+        dto: ChatDto,
+
+        @Req()
+        request: Request & { user: { userId: string } },
+    ) {
+        return this.documentService.chat(
+            documentId,
+            dto.question,
+            request.user.userId,
+        );
     }
 }

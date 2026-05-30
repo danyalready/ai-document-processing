@@ -1,5 +1,6 @@
+import * as path from "path";
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { BullModule } from "@nestjs/bullmq";
 
@@ -12,25 +13,37 @@ import { HealthController } from "./health.controller";
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
+            envFilePath: path.resolve(
+                process.cwd(),
+                process.env.NODE_ENV === "production"
+                    ? ".env.production.local"
+                    : ".env.development.local",
+            ),
         }),
 
-        TypeOrmModule.forRoot({
-            type: "postgres",
-            url: process.env.DATABASE_URL,
-            autoLoadEntities: true,
-            synchronize: true,
+        TypeOrmModule.forRootAsync({
+            inject: [ConfigService],
+            useFactory: () => ({
+                type: "postgres",
+                url: process.env.DATABASE_URL,
+                autoLoadEntities: true,
+                synchronize: true,
+            }),
         }),
 
-        BullModule.forRoot({
-            connection: {
-                host: process.env.REDIS_HOST,
-                port: Number(process.env.REDIS_PORT),
-            },
+        BullModule.forRootAsync({
+            inject: [ConfigService],
+            useFactory: () => ({
+                connection: {
+                    host: process.env.REDIS_HOST,
+                    port: Number(process.env.REDIS_PORT),
+                },
+            }),
         }),
-
-        DocumentModule,
 
         AuthModule,
+
+        DocumentModule,
     ],
     controllers: [AppController, HealthController],
 })

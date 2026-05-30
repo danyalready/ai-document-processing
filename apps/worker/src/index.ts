@@ -1,6 +1,6 @@
-import "dotenv/config";
-import "reflect-metadata";
+import "./env";
 
+import "reflect-metadata";
 import { Worker } from "bullmq";
 import IORedis from "ioredis";
 

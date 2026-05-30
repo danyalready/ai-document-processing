@@ -137,6 +137,11 @@ export default function HomePage() {
                         <p>Status: {doc.status}</p>
 
                         {doc.aiSummary && <p>Summary: {doc.aiSummary}</p>}
+
+                        <div>
+                            <textarea />
+                            <button>Send</button>
+                        </div>
                     </div>
                 ))}
             </div>

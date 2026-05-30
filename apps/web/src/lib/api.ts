@@ -1,4 +1,4 @@
-const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "/api").replace(/\/$/, "");
+import { API_URL } from "./env";
 
 function getToken() {
     return localStorage.getItem("token");
@@ -64,6 +64,23 @@ export async function getDocuments() {
 
     if (!response.ok) {
         throw new Error("Failed to fetch documents");
+    }
+
+    return response.json();
+}
+
+export async function chatWithDocument(documentId: string, question: string) {
+    const response = await fetch(`${API_URL}/documents/${documentId}/chat`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify({ question }),
+    });
+
+    if (!response.ok) {
+        throw new Error("Chat failed");
     }
 
     return response.json();

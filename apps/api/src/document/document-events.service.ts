@@ -1,21 +1,19 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
-import IORedis from "ioredis";
 
 import { DocumentGateway } from "./document.gateway";
+import { RedisService } from "../redis/redis.service";
 
 @Injectable()
 export class DocumentEventsService implements OnModuleInit {
-    constructor(private readonly gateway: DocumentGateway) {}
+    constructor(
+        private readonly gateway: DocumentGateway,
+        private readonly redisService: RedisService,
+    ) {}
 
     async onModuleInit() {
-        const subscriber = new IORedis({
-            host: process.env.REDIS_HOST,
-            port: Number(process.env.REDIS_PORT),
-        });
+        await this.redisService.client.subscribe("document-events");
 
-        await subscriber.subscribe("document-events");
-
-        subscriber.on("message", (_, message) => {
+        this.redisService.client.on("message", (_, message) => {
             const data = JSON.parse(message);
 
             this.gateway.emitDocumentUpdated(data);
