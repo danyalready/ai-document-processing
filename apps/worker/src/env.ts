@@ -6,6 +6,6 @@ dotenv.config({
         process.cwd(),
         process.env.NODE_ENV === "production"
             ? "apps/worker/.env.production.local"
-            : "apps/worker/.env.development.local",
+            : ".env.development.local",
     ),
 });

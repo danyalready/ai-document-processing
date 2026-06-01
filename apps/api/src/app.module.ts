@@ -17,7 +17,7 @@ import { HealthController } from "./health.controller";
                 process.cwd(),
                 process.env.NODE_ENV === "production"
                     ? "apps/api/.env.production.local"
-                    : "apps/api/.env.development.local",
+                    : ".env.development.local",
             ),
         }),
 
