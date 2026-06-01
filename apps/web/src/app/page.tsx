@@ -1,150 +1,197 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Sparkles } from "lucide-react";
 
-import { socket } from "@/lib/socket";
-import { getDocuments, login, register, uploadDocument } from "@/lib/api";
+import { ChromeIcon } from "@/shared/components/icons/ChromeIcon";
+import { GithubIcon } from "@/shared/components/icons/GithubIcon";
 
-type DocumentItem = {
-    id: string;
-    originalName: string;
-    status: string;
-    aiSummary?: string;
-};
+import AuthForm from "./AuthForm";
 
-export default function HomePage() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [authenticated, setAuthenticated] = useState(false);
+interface Props {
+    onLogin: () => void;
+}
 
-    const [documents, setDocuments] = useState<DocumentItem[]>([]);
+export default function AuthPage({ onLogin }: Props) {
+    const [mode, setMode] = useState<"login" | "signup">("login");
 
-    const [uploading, setUploading] = useState(false);
-
-    async function loadDocuments() {
-        const data = await getDocuments();
-
-        setDocuments(data);
-    }
-
-    async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
-        const file = event.target.files?.[0];
-
-        if (!file) return;
-
-        try {
-            setUploading(true);
-
-            await uploadDocument(file);
-
-            await loadDocuments();
-        } finally {
-            setUploading(false);
-        }
-    }
-
-    async function handleLogin() {
-        const response = await login(email, password);
-
-        localStorage.setItem("token", response.token);
-
-        setAuthenticated(true);
-
-        await loadDocuments();
-    }
-
-    async function handleRegister() {
-        const response = await register(email, password);
-
-        localStorage.setItem("token", response.token);
-
-        setAuthenticated(true);
-
-        await loadDocuments();
-    }
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        loadDocuments();
-
-        socket.on("document.updated", () => loadDocuments());
-
-        return () => {
-            socket.off("document.updated");
-        };
-    }, []);
-
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-
-        if (token) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setAuthenticated(true);
-
-            loadDocuments();
-        }
-    }, []);
-
-    if (!authenticated) {
-        return (
-            <main className="p-10 space-y-4">
-                <input
-                    className="border p-2"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-
-                <input
-                    className="border p-2"
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <div className="space-x-4">
-                    <button className="border px-4 py-2" onClick={handleLogin}>
-                        Login
-                    </button>
-
-                    <button
-                        className="border px-4 py-2"
-                        onClick={handleRegister}
-                    >
-                        Register
-                    </button>
-                </div>
-            </main>
-        );
-    }
+    const isLogin = mode === "login";
 
     return (
-        <main className="p-10 space-y-6">
-            <div>
-                <input type="file" onChange={handleUpload} />
-            </div>
+        <div className="size-full flex bg-background dark h-svh">
+            {/* Left Panel - Branding */}
+            <div className="hidden lg:flex lg:w-1/2 bg-linear-to-br from-primary/20 via-background to-accent/20 p-12 flex-col justify-between relative overflow-hidden">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-10">
+                    <div className="absolute top-20 left-20 w-64 h-64 bg-primary rounded-full blur-3xl" />
+                    <div className="absolute bottom-20 right-20 w-96 h-96 bg-accent rounded-full blur-3xl" />
+                </div>
 
-            {uploading && <p>Uploading...</p>}
-
-            <div className="space-y-4">
-                {documents.map((doc) => (
-                    <div key={doc.id} className="border p-4 rounded">
-                        <p>
-                            <strong>{doc.originalName}</strong>
-                        </p>
-
-                        <p>Status: {doc.status}</p>
-
-                        {doc.aiSummary && <p>Summary: {doc.aiSummary}</p>}
-
+                <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-8">
+                        <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center">
+                            <Sparkles className="w-6 h-6 text-primary-foreground" />
+                        </div>
                         <div>
-                            <textarea />
-                            <button>Send</button>
+                            <h1 className="text-xl font-mono font-medium text-foreground">
+                                DocFlow AI
+                            </h1>
+                            <p className="text-sm font-mono text-muted-foreground">
+                                Document Intelligence Platform
+                            </p>
                         </div>
                     </div>
-                ))}
+
+                    <div className="space-y-8 mt-16">
+                        <div>
+                            <h2 className="text-3xl font-mono font-medium text-foreground mb-4">
+                                Enterprise-Grade
+                                <br />
+                                Document Processing
+                            </h2>
+                            <p className="text-base font-mono text-muted-foreground leading-relaxed">
+                                AI-powered OCR, extraction, and semantic search
+                                for modern infrastructure teams
+                            </p>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-3 p-4 bg-card/50 border border-border rounded-xl backdrop-blur-sm">
+                                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                                    <Sparkles className="w-4 h-4 text-primary" />
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-mono font-medium text-foreground mb-1">
+                                        98.7% OCR Accuracy
+                                    </h3>
+                                    <p className="text-xs font-mono text-muted-foreground">
+                                        State-of-the-art models with
+                                        multi-language support
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start gap-3 p-4 bg-card/50 border border-border rounded-xl backdrop-blur-sm">
+                                <div className="w-8 h-8 rounded-lg bg-chart-2/10 flex items-center justify-center shrink-0">
+                                    <Sparkles className="w-4 h-4 text-chart-2" />
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-mono font-medium text-foreground mb-1">
+                                        Real-time Processing
+                                    </h3>
+                                    <p className="text-xs font-mono text-muted-foreground">
+                                        GPU-accelerated pipeline with
+                                        auto-scaling workers
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start gap-3 p-4 bg-card/50 border border-border rounded-xl backdrop-blur-sm">
+                                <div className="w-8 h-8 rounded-lg bg-chart-3/10 flex items-center justify-center shrink-0">
+                                    <Sparkles className="w-4 h-4 text-chart-3" />
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-mono font-medium text-foreground mb-1">
+                                        Semantic Search
+                                    </h3>
+                                    <p className="text-xs font-mono text-muted-foreground">
+                                        Vector embeddings for intelligent
+                                        document retrieval
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="relative z-10">
+                    <div className="flex items-center gap-8 text-xs font-mono text-muted-foreground">
+                        <span>SOC 2 Type II Certified</span>
+                        <span>•</span>
+                        <span>GDPR Compliant</span>
+                        <span>•</span>
+                        <span>99.9% Uptime SLA</span>
+                    </div>
+                </div>
             </div>
-        </main>
+
+            {/* Right Panel - Auth Form */}
+            <div className="flex-1 flex items-center justify-center p-8">
+                <div className="w-full max-w-md">
+                    {/* Mobile Logo */}
+                    <div className="lg:hidden flex items-center gap-3 mb-8">
+                        <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+                            <Sparkles className="w-5 h-5 text-primary-foreground" />
+                        </div>
+                        <div>
+                            <h1 className="text-lg font-mono font-medium text-foreground">
+                                DocFlow AI
+                            </h1>
+                            <p className="text-xs font-mono text-muted-foreground">
+                                Document Intelligence
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="mb-8">
+                        <h2 className="text-2xl font-mono font-medium text-foreground mb-2">
+                            {isLogin ? "Welcome back" : "Create your account"}
+                        </h2>
+                        <p className="text-sm font-mono text-muted-foreground">
+                            {isLogin
+                                ? "Sign in to access your document processing workspace"
+                                : "Start processing documents with AI-powered intelligence"}
+                        </p>
+                    </div>
+
+                    {/* OAuth Buttons */}
+                    <div className="space-y-3 mb-6">
+                        <button className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-secondary border border-border rounded-xl text-sm font-mono text-foreground hover:bg-secondary/80 transition-colors">
+                            <ChromeIcon className="w-4 h-4" />
+                            <span>Continue with Google</span>
+                        </button>
+                        <button className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-secondary border border-border rounded-xl text-sm font-mono text-foreground hover:bg-secondary/80 transition-colors">
+                            <GithubIcon className="w-4 h-4" />
+                            <span>Continue with GitHub</span>
+                        </button>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="relative mb-6">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-border" />
+                        </div>
+                        <div className="relative flex justify-center text-xs">
+                            <span className="px-2 bg-background text-muted-foreground font-mono">
+                                or continue with email
+                            </span>
+                        </div>
+                    </div>
+
+                    <AuthForm
+                        isLogin={isLogin}
+                        formData={{ email: "", password: "", fullname: "" }}
+                        handleSubmit={() => {}}
+                    />
+
+                    {/* Toggle Mode */}
+                    <div className="mt-6 text-center">
+                        <span className="text-sm font-mono text-muted-foreground">
+                            {isLogin
+                                ? "Don't have an account?"
+                                : "Already have an account?"}{" "}
+                        </span>
+                        <button
+                            onClick={() =>
+                                setMode(isLogin ? "signup" : "login")
+                            }
+                            className="text-sm font-mono text-primary hover:text-primary/80"
+                        >
+                            {isLogin ? "Sign up" : "Sign in"}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
