@@ -4,6 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { UserEntity } from "@app/shared";
 
+import { MailModule } from "../mail/mail.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { JwtStrategy } from "./jwt.strategy";
@@ -17,6 +18,7 @@ import { JwtStrategy } from "./jwt.strategy";
             }),
         }),
         TypeOrmModule.forFeature([UserEntity]),
+        MailModule,
     ],
     controllers: [AuthController],
     providers: [JwtStrategy, AuthService],
