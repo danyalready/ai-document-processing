@@ -1,21 +1,52 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Sparkles } from "lucide-react";
 
 import { ChromeIcon } from "@/shared/components/icons/ChromeIcon";
 import { GithubIcon } from "@/shared/components/icons/GithubIcon";
+import { login, register } from "@/lib/api";
 
 import AuthForm from "./AuthForm";
 
-interface Props {
-    onLogin: () => void;
-}
-
-export default function AuthPage({ onLogin }: Props) {
+export default function AuthPage() {
+    const router = useRouter();
     const [mode, setMode] = useState<"login" | "signup">("login");
+    const [error, setError] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const isLogin = mode === "login";
+
+    async function handleAuthSubmit(formData: {
+        fullName: string;
+        email: string;
+        password: string;
+    }) {
+        try {
+            setError(null);
+            setIsSubmitting(true);
+
+            if (isLogin) {
+                await login(formData.email, formData.password);
+                router.replace("/dashboard");
+                router.refresh();
+                return;
+            }
+
+            await register(
+                formData.fullName,
+                formData.email,
+                formData.password,
+            );
+            setMode("login");
+            setError("Check your email to verify your account before signing in.");
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Authentication failed");
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
 
     return (
         <div className="size-full flex bg-background dark h-svh">
@@ -170,8 +201,9 @@ export default function AuthPage({ onLogin }: Props) {
 
                     <AuthForm
                         isLogin={isLogin}
-                        formData={{ email: "", password: "", fullname: "" }}
-                        handleSubmit={() => {}}
+                        handleSubmit={handleAuthSubmit}
+                        error={error}
+                        isSubmitting={isSubmitting}
                     />
 
                     {/* Toggle Mode */}

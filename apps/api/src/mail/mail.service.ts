@@ -18,16 +18,10 @@ export class MailService {
     constructor(private readonly configService: ConfigService) {
         const apiKey = this.configService.get<string>("RESEND_API_KEY");
 
-        this.fromEmail =
-            this.configService.get<string>("EMAIL_FROM") ??
-            "AIDoc <onboarding@resend.dev>";
-        this.apiPublicUrl =
-            this.configService.get<string>("API_PUBLIC_URL") ??
-            "http://localhost:3001";
+        this.fromEmail = this.configService.get<string>("EMAIL_FROM");
+        this.apiPublicUrl = this.configService.get<string>("API_PUBLIC_URL");
 
-        if (apiKey) {
-            this.resend = new Resend(apiKey);
-        }
+        if (apiKey) this.resend = new Resend(apiKey);
     }
 
     async sendVerificationEmail({

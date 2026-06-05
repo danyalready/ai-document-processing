@@ -2,31 +2,29 @@ import { useState } from "react";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 
 interface FormData {
-    fullname?: string;
+    fullName: string;
     email: string;
     password: string;
 }
 
 interface Props {
     isLogin: boolean;
-    formData: FormData;
-    handleSubmit: () => void;
+    handleSubmit: (formData: FormData) => Promise<void>;
+    error?: string | null;
+    isSubmitting?: boolean;
 }
 
 export default function AuthForm(props: Props) {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
+        fullName: "",
         email: "",
         password: "",
-        name: "",
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulate authentication
-        setTimeout(() => {
-            // onLogin();
-        }, 800);
+        await props.handleSubmit(formData);
     };
 
     return (
@@ -40,11 +38,11 @@ export default function AuthForm(props: Props) {
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <input
                             type="text"
-                            value={props.formData.fullname}
+                            value={formData.fullName}
                             onChange={(e) =>
                                 setFormData({
                                     ...formData,
-                                    name: e.target.value,
+                                    fullName: e.target.value,
                                 })
                             }
                             placeholder="John Doe"
@@ -156,11 +154,22 @@ export default function AuthForm(props: Props) {
                 </div>
             )}
 
+            {props.error && (
+                <p className="text-sm font-mono text-destructive">
+                    {props.error}
+                </p>
+            )}
+
             <button
                 type="submit"
-                className="w-full py-3 bg-primary text-primary-foreground rounded-xl text-sm font-mono font-medium hover:bg-primary/90 transition-colors"
+                disabled={props.isSubmitting}
+                className="w-full py-3 bg-primary text-primary-foreground rounded-xl text-sm font-mono font-medium hover:bg-primary/90 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
             >
-                {props.isLogin ? "Sign In" : "Create Account"}
+                {props.isSubmitting
+                    ? "Please wait..."
+                    : props.isLogin
+                      ? "Sign In"
+                      : "Create Account"}
             </button>
         </form>
     );

@@ -1,28 +1,42 @@
 import { API_URL } from "./env";
 
-function getToken() {
-    return localStorage.getItem("token");
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+    const response = await fetch(`${API_URL}${path}`, {
+        ...init,
+        credentials: "include",
+    });
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => null);
+        const message =
+            typeof error?.message === "string"
+                ? error.message
+                : "Request failed";
+
+        throw new Error(message);
+    }
+
+    return response.json();
 }
 
-export async function register(email: string, password: string) {
-    const response = await fetch(`${API_URL}/auth/register`, {
+export async function register(
+    fullName: string,
+    email: string,
+    password: string,
+) {
+    return request<{ message: string }>("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+            fullName,
             email,
             password,
         }),
     });
-
-    if (!response.ok) {
-        throw new Error("Registration failed");
-    }
-
-    return response.json();
 }
 
 export async function login(email: string, password: string) {
-    const response = await fetch(`${API_URL}/auth/login`, {
+    return request<{ message: string }>("/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -30,12 +44,12 @@ export async function login(email: string, password: string) {
             password,
         }),
     });
+}
 
-    if (!response.ok) {
-        throw new Error("Login failed");
-    }
-
-    return response.json();
+export async function logout() {
+    return request<{ message: string }>("/auth/logout", {
+        method: "POST",
+    });
 }
 
 export async function uploadDocument(file: File) {
@@ -43,45 +57,24 @@ export async function uploadDocument(file: File) {
 
     formData.append("file", file);
 
-    const response = await fetch(`${API_URL}/documents/upload`, {
+    return request("/documents/upload", {
         method: "POST",
-        headers: { Authorization: `Bearer ${getToken()}` },
         body: formData,
     });
-
-    if (!response.ok) {
-        throw new Error("Upload failed");
-    }
-
-    return response.json();
 }
 
-export async function getDocuments() {
-    const response = await fetch(`${API_URL}/documents`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
+export async function getDocuments<T>() {
+    return request<T>("/documents", {
         cache: "no-store",
     });
-
-    if (!response.ok) {
-        throw new Error("Failed to fetch documents");
-    }
-
-    return response.json();
 }
 
 export async function chatWithDocument(documentId: string, question: string) {
-    const response = await fetch(`${API_URL}/documents/${documentId}/chat`, {
+    return request(`/documents/${documentId}/chat`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify({ question }),
     });
-
-    if (!response.ok) {
-        throw new Error("Chat failed");
-    }
-
-    return response.json();
 }

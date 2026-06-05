@@ -7,7 +7,7 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 
-import { DocumentStatus } from "./document-status.enum";
+import { DocumentStatus } from "../document-status.enum";
 import { UserEntity } from "./user.entity";
 
 @Entity("documents")

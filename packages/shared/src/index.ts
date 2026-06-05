@@ -1,3 +1,3 @@
-export { DocumentEntity } from "./document.entity";
+export * from "./auth";
+export * from "./entities";
 export { DocumentStatus } from "./document-status.enum";
-export { UserEntity } from "./user.entity";

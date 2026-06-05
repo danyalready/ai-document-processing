@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { socket } from "@/lib/socket";
-import { getDocuments, login, register, uploadDocument } from "@/lib/api";
+import { getDocuments, logout, uploadDocument } from "@/lib/api";
 
 type DocumentItem = {
     id: string;
@@ -13,19 +14,24 @@ type DocumentItem = {
 };
 
 export default function HomePage() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [authenticated, setAuthenticated] = useState(false);
-
+    const router = useRouter();
     const [documents, setDocuments] = useState<DocumentItem[]>([]);
-
     const [uploading, setUploading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    async function loadDocuments() {
-        const data = await getDocuments();
+    const loadDocuments = useCallback(async () => {
+        try {
+            const data = await getDocuments<DocumentItem[]>();
 
-        setDocuments(data);
-    }
+            setDocuments(data);
+            setError(null);
+        } catch (err) {
+            setError(
+                err instanceof Error ? err.message : "Failed to load documents",
+            );
+            router.replace("/");
+        }
+    }, [router]);
 
     async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
         const file = event.target.files?.[0];
@@ -38,94 +44,43 @@ export default function HomePage() {
             await uploadDocument(file);
 
             await loadDocuments();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Upload failed");
         } finally {
             setUploading(false);
         }
     }
 
-    async function handleLogin() {
-        const response = await login(email, password);
-
-        localStorage.setItem("token", response.token);
-
-        setAuthenticated(true);
-
-        await loadDocuments();
-    }
-
-    async function handleRegister() {
-        const response = await register(email, password);
-
-        localStorage.setItem("token", response.token);
-
-        setAuthenticated(true);
-
-        await loadDocuments();
+    async function handleLogout() {
+        await logout();
+        router.replace("/");
     }
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        loadDocuments();
+        void Promise.resolve().then(loadDocuments);
 
-        socket.on("document.updated", () => loadDocuments());
+        socket.on("document.updated", loadDocuments);
 
         return () => {
-            socket.off("document.updated");
+            socket.off("document.updated", loadDocuments);
         };
-    }, []);
-
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-
-        if (token) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setAuthenticated(true);
-
-            loadDocuments();
-        }
-    }, []);
-
-    if (!authenticated) {
-        return (
-            <main className="p-10 space-y-4">
-                <input
-                    className="border p-2"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-
-                <input
-                    className="border p-2"
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <div className="space-x-4">
-                    <button className="border px-4 py-2" onClick={handleLogin}>
-                        Login
-                    </button>
-
-                    <button
-                        className="border px-4 py-2"
-                        onClick={handleRegister}
-                    >
-                        Register
-                    </button>
-                </div>
-            </main>
-        );
-    }
+    }, [loadDocuments]);
 
     return (
         <main className="p-10 space-y-6">
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-medium">Documents</h1>
+                <button className="border px-4 py-2" onClick={handleLogout}>
+                    Sign out
+                </button>
+            </div>
+
             <div>
                 <input type="file" onChange={handleUpload} />
             </div>
 
             {uploading && <p>Uploading...</p>}
+            {error && <p className="text-destructive">{error}</p>}
 
             <div className="space-y-4">
                 {documents.map((doc) => (

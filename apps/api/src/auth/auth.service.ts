@@ -82,9 +82,7 @@ export class AuthService {
             throw new ForbiddenException("Please verify your email first");
         }
 
-        const token = await this.jwtService.signAsync({
-            sub: user.id,
-        });
+        const token = await this.createAuthToken(user.id);
 
         return { token };
     }
@@ -112,9 +110,7 @@ export class AuthService {
 
         await this.usersRepo.save(user);
 
-        const authToken = await this.jwtService.signAsync({
-            sub: user.id,
-        });
+        const authToken = await this.createAuthToken(user.id);
 
         return { token: authToken };
     }
@@ -156,5 +152,11 @@ export class AuthService {
 
     private hashEmailVerificationToken(token: string) {
         return createHash("sha256").update(token).digest("hex");
+    }
+
+    private createAuthToken(userId: string) {
+        return this.jwtService.signAsync({
+            sub: userId,
+        });
     }
 }
