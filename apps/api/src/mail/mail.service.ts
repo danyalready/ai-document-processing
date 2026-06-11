@@ -88,33 +88,11 @@ export class MailService {
                             </p>
 
                             <p>
-                                To activate your account and confirm ownership of this email address,
-                                please verify your email by clicking the button below.
-                            </p>
-
-                            <div style="text-align:center;margin:32px 0;">
-                                <a
-                                href="${safeUrl}"
-                                style="
-                                    display:inline-block;
-                                    padding:12px 24px;
-                                    background-color:#111827;
-                                    color:#ffffff;
-                                    text-decoration:none;
-                                    border-radius:6px;
-                                    font-weight:bold;
-                                "
-                                >
-                                Verify Email
-                                </a>
-                            </div>
-
-                            <p>
                                 This verification link may expire after a period of time for security reasons.
                             </p>
 
                             <p>
-                                If the button above does not work, copy and paste the following link into your browser:
+                                Copy and paste the following link into your browser:
                             </p>
 
                             <p style="word-break:break-all;">
