@@ -65,6 +65,24 @@ export class MailService {
         const safeUrl = this.escapeHtml(verificationUrl);
 
         return `
+        <div>
+            <h3>Subject: AIDoc Test</h3>
+
+            <p>
+                Hello,
+
+                This is a test message from AIDoc.
+
+                Website:
+                https://aidoc.it.com
+
+                Regards,
+                AIDoc Team
+            </p>
+        </div>
+        `;
+
+        return `
             <div style="margin:0;padding:0;background-color:#f4f4f5;font-family:Arial,sans-serif;">
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f4f5;padding:32px 0;">
                     <tr>
