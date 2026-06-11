@@ -41,8 +41,15 @@ export class MailService {
         await this.resend.emails.send({
             from: this.fromEmail,
             to,
-            subject: "AIDoc: Verify your email",
+            subject: "Verify your email address for AIDoc",
             html: this.renderVerificationEmail(fullName, verificationUrl),
+            text: `Hello ${fullName}
+
+            Verify your email address:
+
+            ${verificationUrl}
+
+            If you did not create an account with AIDoc, you can ignore this email.`,
         });
     }
 
@@ -58,16 +65,104 @@ export class MailService {
         const safeUrl = this.escapeHtml(verificationUrl);
 
         return `
-            <div style="font-family: Arial, sans-serif; line-height: 1.5;">
-                <p>Hi ${safeName},</p>
-                <p>Please verify your email address to finish creating your account.</p>
-                <p>
-                    <a href="${safeUrl}" style="display: inline-block; padding: 10px 14px; background: #111827; color: #ffffff; text-decoration: none; border-radius: 6px;">
-                        Verify email
-                    </a>
-                </p>
-                <p>If the button does not work, paste this link into your browser:</p>
-                <p><a href="${safeUrl}">${safeUrl}</a></p>
+            <div style="margin:0;padding:0;background-color:#f4f4f5;font-family:Arial,sans-serif;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f4f5;padding:32px 0;">
+                    <tr>
+                    <td align="center">
+                        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background:#ffffff;border-radius:8px;overflow:hidden;">
+                        
+                        <tr>
+                            <td style="padding:32px 40px 16px 40px;">
+                            <h1 style="margin:0;color:#111827;font-size:24px;">
+                                AIDoc
+                            </h1>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:0 40px 24px 40px;color:#374151;font-size:16px;line-height:1.6;">
+                            <p>Hello ${safeName},</p>
+
+                            <p>
+                                Thank you for creating an account with <strong>AIDoc</strong>.
+                            </p>
+
+                            <p>
+                                To activate your account and confirm ownership of this email address,
+                                please verify your email by clicking the button below.
+                            </p>
+
+                            <div style="text-align:center;margin:32px 0;">
+                                <a
+                                href="${safeUrl}"
+                                style="
+                                    display:inline-block;
+                                    padding:12px 24px;
+                                    background-color:#111827;
+                                    color:#ffffff;
+                                    text-decoration:none;
+                                    border-radius:6px;
+                                    font-weight:bold;
+                                "
+                                >
+                                Verify Email
+                                </a>
+                            </div>
+
+                            <p>
+                                This verification link may expire after a period of time for security reasons.
+                            </p>
+
+                            <p>
+                                If the button above does not work, copy and paste the following link into your browser:
+                            </p>
+
+                            <p style="word-break:break-all;">
+                                <a href="${safeUrl}" style="color:#2563eb;">
+                                ${safeUrl}
+                                </a>
+                            </p>
+
+                            <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0;" />
+
+                            <p>
+                                <strong>Why did you receive this email?</strong>
+                            </p>
+
+                            <p>
+                                Someone recently created an AIDoc account using this email address.
+                                If that was you, please complete the verification process.
+                            </p>
+
+                            <p>
+                                If you did not create an account, you can safely ignore this message.
+                                No further action is required.
+                            </p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:24px 40px;background:#f9fafb;color:#6b7280;font-size:13px;line-height:1.5;">
+                            <p style="margin:0 0 8px 0;">
+                                Need help? Contact us at
+                                <a href="mailto:support@aidoc.it.com">support@aidoc.it.com</a>
+                            </p>
+
+                            <p style="margin:0 0 8px 0;">
+                                Website:
+                                <a href="https://aidoc.it.com">https://aidoc.it.com</a>
+                            </p>
+
+                            <p style="margin:0;">
+                                © 2026 AIDoc. All rights reserved.
+                            </p>
+                            </td>
+                        </tr>
+
+                        </table>
+                    </td>
+                    </tr>
+                </table>
             </div>
         `;
     }
