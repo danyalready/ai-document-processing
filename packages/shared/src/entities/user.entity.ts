@@ -25,7 +25,10 @@ export class UserEntity {
     @Column({ type: "timestamp", nullable: true })
     emailVerificationTokenExpiresAt?: Date | null;
 
-    @Column({ type: "varchar" })
+    @Column({ type: "varchar", nullable: true, unique: true })
+    googleId?: string;
+
+    @Column({ type: "varchar", nullable: true })
     passwordHash!: string;
 
     @CreateDateColumn()

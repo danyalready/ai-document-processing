@@ -28,10 +28,7 @@ function extractJwtFromCookie(request: Request) {
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor() {
         super({
-            jwtFromRequest: ExtractJwt.fromExtractors([
-                extractJwtFromCookie,
-                ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ]),
+            jwtFromRequest: ExtractJwt.fromExtractors([extractJwtFromCookie]),
 
             ignoreExpiration: false,
 

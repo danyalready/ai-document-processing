@@ -159,4 +159,24 @@ export class AuthService {
             sub: userId,
         });
     }
+
+    async loginWithGoogle(googleId: string, email: string) {
+        let user = await this.usersRepo.findOne({
+            where: [{ googleId }, { email }],
+        });
+
+        if (!user) {
+            user = this.usersRepo.create({
+                email,
+                googleId,
+                isEmailVerified: true,
+            });
+
+            user = await this.usersRepo.save(user);
+        }
+
+        const token = await this.jwtService.signAsync({ sub: user.id });
+
+        return { token };
+    }
 }

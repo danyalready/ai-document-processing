@@ -40,13 +40,21 @@ export default function AuthPage() {
                 formData.password,
             );
             setMode("login");
-            setError("Check your email to verify your account before signing in.");
+            setError(
+                "Check your email to verify your account before signing in.",
+            );
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Authentication failed");
+            setError(
+                err instanceof Error ? err.message : "Authentication failed",
+            );
         } finally {
             setIsSubmitting(false);
         }
     }
+
+    const handleGoogleAuth = () => {
+        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+    };
 
     return (
         <div className="size-full flex bg-background dark h-svh">
@@ -177,7 +185,10 @@ export default function AuthPage() {
 
                     {/* OAuth Buttons */}
                     <div className="space-y-3 mb-6">
-                        <button className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-secondary border border-border rounded-xl text-sm font-mono text-foreground hover:bg-secondary/80 transition-colors">
+                        <button
+                            className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-secondary border border-border rounded-xl text-sm font-mono text-foreground hover:bg-secondary/80 transition-colors"
+                            onClick={handleGoogleAuth}
+                        >
                             <ChromeIcon className="w-4 h-4" />
                             <span>Continue with Google</span>
                         </button>

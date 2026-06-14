@@ -16,7 +16,9 @@
         "noImplicitAny": false,
         "strictBindCallApply": false,
         "forceConsistentCasingInFileNames": false,
-        "noFallthroughCasesInSwitch": false
+        "noFallthroughCasesInSwitch": false,
+        "ignoreDeprecations": "6.0",
+        "esModuleInterop": false
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "dist", "test"]
