@@ -96,6 +96,26 @@ export class AuthController {
         res.redirect(process.env.WEB_URL!);
     }
 
+    @Get("github")
+    @UseGuards(GoogleAuthGuard)
+    githubAuth() {}
+
+    @Get("github/callback")
+    @UseGuards(GoogleAuthGuard)
+    async githubCallback(
+        @Req() req: any,
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        const { token } = await this.authService.loginWithGithub(
+            req.user.githubId,
+            req.user.email,
+        );
+
+        this.setAuthCookie(res, token);
+
+        res.redirect(process.env.WEB_URL!);
+    }
+
     private setAuthCookie(res: Response, token: string) {
         res.cookie(AUTH_COOKIE_NAME, token, {
             httpOnly: true,

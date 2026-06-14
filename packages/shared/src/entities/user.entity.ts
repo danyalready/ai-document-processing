@@ -28,6 +28,9 @@ export class UserEntity {
     @Column({ type: "varchar", nullable: true, unique: true })
     googleId?: string;
 
+    @Column({ type: "varchar", nullable: true, unique: true })
+    githubId?: string;
+
     @Column({ type: "varchar", nullable: true })
     passwordHash!: string;
 

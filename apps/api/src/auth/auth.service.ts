@@ -179,4 +179,24 @@ export class AuthService {
 
         return { token };
     }
+
+    async loginWithGithub(githubId: string, email: string) {
+        let user = await this.usersRepo.findOne({
+            where: [{ githubId }, { email }],
+        });
+
+        if (!user) {
+            user = this.usersRepo.create({
+                email,
+                githubId,
+                isEmailVerified: true,
+            });
+
+            user = await this.usersRepo.save(user);
+        }
+
+        const token = await this.jwtService.signAsync({ sub: user.id });
+
+        return { token };
+    }
 }

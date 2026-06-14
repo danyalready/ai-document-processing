@@ -56,6 +56,10 @@ export default function AuthPage() {
         window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
     };
 
+    const handleGithubAuth = () => {
+        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/github`;
+    };
+
     return (
         <div className="size-full flex bg-background dark h-svh">
             {/* Left Panel - Branding */}
@@ -192,7 +196,10 @@ export default function AuthPage() {
                             <ChromeIcon className="w-4 h-4" />
                             <span>Continue with Google</span>
                         </button>
-                        <button className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-secondary border border-border rounded-xl text-sm font-mono text-foreground hover:bg-secondary/80 transition-colors">
+                        <button
+                            className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-secondary border border-border rounded-xl text-sm font-mono text-foreground hover:bg-secondary/80 transition-colors"
+                            onClick={handleGithubAuth}
+                        >
                             <GithubIcon className="w-4 h-4" />
                             <span>Continue with GitHub</span>
                         </button>
