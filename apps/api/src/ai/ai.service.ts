@@ -18,7 +18,8 @@ export class AiService {
             messages: [
                 {
                     role: "system",
-                    content: "Answer questions using the provided document.",
+                    content:
+                        "Answer questions only using the provided document. If the answer is not in the document, say so.",
                 },
                 {
                     role: "user",
