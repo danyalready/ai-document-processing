@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
     FileSearch,
     Layers,
@@ -7,23 +8,26 @@ import {
     Settings,
 } from "lucide-react";
 
-type Screen = "dashboard" | "chat" | "analysis" | "library" | "settings";
+export type Screen =
+    | "/dashboard"
+    | "/dashboard/chat"
+    | "/dashboard/analysis"
+    | "/dashboard/library"
+    | "/dashboard/settings";
 
 const NAV = [
-    { id: "dashboard" as Screen, icon: LayoutDashboard, label: "Dashboard" },
-    { id: "chat" as Screen, icon: MessageSquare, label: "AI Chat" },
-    { id: "analysis" as Screen, icon: FileSearch, label: "Analysis" },
-    { id: "library" as Screen, icon: Library, label: "Library" },
-    { id: "settings" as Screen, icon: Settings, label: "Settings" },
+    { id: "/dashboard" as Screen, icon: LayoutDashboard, label: "Dashboard" },
+    { id: "/dashboard/chat" as Screen, icon: MessageSquare, label: "AI Chat" },
+    {
+        id: "/dashboard/analysis" as Screen,
+        icon: FileSearch,
+        label: "Analysis",
+    },
+    { id: "/dashboard/library" as Screen, icon: Library, label: "Library" },
+    { id: "/dashboard/settings" as Screen, icon: Settings, label: "Settings" },
 ];
 
-export default function Sidebar({
-    active,
-    setActive,
-}: {
-    active: Screen;
-    setActive: (s: Screen) => void;
-}) {
+export default function Sidebar({ active }: { active: Screen }) {
     return (
         <aside className="w-18 h-full bg-white border-r border-border flex flex-col items-center py-6 gap-1 shrink-0">
             {/* Logo */}
@@ -33,11 +37,10 @@ export default function Sidebar({
 
             {/* Nav items */}
             <nav className="flex flex-col items-center gap-1 flex-1">
-                {NAV.map(({ id, icon: Icon, label }) => (
-                    <button
+                {NAV.map(({ id, icon: Icon }) => (
+                    <Link
                         key={id}
-                        onClick={() => setActive(id)}
-                        title={label}
+                        href={id}
                         className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-150 group relative
               ${
                   active === id
@@ -46,7 +49,7 @@ export default function Sidebar({
               }`}
                     >
                         <Icon className="w-4.5 h-4.5" />
-                    </button>
+                    </Link>
                 ))}
             </nav>
 

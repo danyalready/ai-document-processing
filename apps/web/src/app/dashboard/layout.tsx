@@ -1,12 +1,15 @@
 "use client";
 
-import Sidebar from "@/widgets/Sidebar";
+import { type PropsWithChildren } from "react";
+import { usePathname } from "next/navigation";
+
+import Sidebar, { type Screen } from "@/widgets/Sidebar";
 
 export default function DashboardLayout({
     children,
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
+}: Readonly<PropsWithChildren>) {
+    const pathname = usePathname() as Screen;
+
     return (
         <div
             className="flex h-screen bg-white overflow-hidden"
@@ -15,7 +18,7 @@ export default function DashboardLayout({
                     "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
             }}
         >
-            <Sidebar active="dashboard" setActive={() => {}} />
+            <Sidebar active={pathname} />
             {children}
         </div>
     );

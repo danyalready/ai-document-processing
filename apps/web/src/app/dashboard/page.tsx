@@ -20,6 +20,7 @@ import {
 
 import { socket } from "@/lib/socket";
 import { getDocuments, uploadDocument } from "@/lib/api";
+import Link from "next/link";
 
 type DocumentItem = {
     id: string;
@@ -208,13 +209,13 @@ export default function DashboardScreen() {
                             <h2 className="text-[15px] font-semibold text-[#111111]">
                                 Recent documents
                             </h2>
-                            <button
-                                // onClick={() => setActive("library")}
+                            <Link
+                                href="/dashboard/library"
                                 className="text-[13px] text-[#4F7CFF] hover:underline flex items-center gap-1"
                             >
                                 View all{" "}
                                 <ChevronRight className="w-3.5 h-3.5" />
-                            </button>
+                            </Link>
                         </div>
                         <div className="flex flex-col gap-2">
                             {documents.map((doc) => (
