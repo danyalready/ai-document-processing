@@ -1,29 +1,14 @@
 import Link from "next/link";
-import {
-    FileSearch,
-    Layers,
-    LayoutDashboard,
-    Library,
-    MessageSquare,
-    Settings,
-} from "lucide-react";
+import { Layers, LayoutDashboard, Library, Settings } from "lucide-react";
 
 export type Screen =
     | "/dashboard"
-    | "/dashboard/chat"
-    | "/dashboard/analysis"
-    | "/dashboard/library"
+    | "/dashboard/documents"
     | "/dashboard/settings";
 
 const NAV = [
     { id: "/dashboard" as Screen, icon: LayoutDashboard, label: "Dashboard" },
-    { id: "/dashboard/chat" as Screen, icon: MessageSquare, label: "AI Chat" },
-    {
-        id: "/dashboard/analysis" as Screen,
-        icon: FileSearch,
-        label: "Analysis",
-    },
-    { id: "/dashboard/library" as Screen, icon: Library, label: "Library" },
+    { id: "/dashboard/documents" as Screen, icon: Library, label: "Documents" },
     { id: "/dashboard/settings" as Screen, icon: Settings, label: "Settings" },
 ];
 

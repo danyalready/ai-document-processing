@@ -210,7 +210,7 @@ export default function DashboardScreen() {
                                 Recent documents
                             </h2>
                             <Link
-                                href="/dashboard/library"
+                                href="/dashboard/documents"
                                 className="text-[13px] text-[#4F7CFF] hover:underline flex items-center gap-1"
                             >
                                 View all{" "}
