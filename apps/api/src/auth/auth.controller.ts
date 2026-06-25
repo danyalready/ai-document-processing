@@ -17,6 +17,7 @@ import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
 import { ResendVerificationDto } from "./dto/resend-verification.dto";
 import { GoogleAuthGuard } from "./google-auth.guard";
+import { GithubAuthGuard } from "./github-auth.guard";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 
 const AUTH_COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
@@ -97,11 +98,11 @@ export class AuthController {
     }
 
     @Get("github")
-    @UseGuards(GoogleAuthGuard)
+    @UseGuards(GithubAuthGuard)
     githubAuth() {}
 
     @Get("github/callback")
-    @UseGuards(GoogleAuthGuard)
+    @UseGuards(GithubAuthGuard)
     async githubCallback(
         @Req() req: any,
         @Res({ passthrough: true }) res: Response,
