@@ -19,6 +19,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, "github") {
         _refreshToken: string,
         profile: Profile,
     ) {
+        console.log(profile);
         return {
             githubId: profile.id,
             fullName: profile.displayName,
