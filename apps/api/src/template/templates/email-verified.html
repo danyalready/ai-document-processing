@@ -8,103 +8,142 @@
     <body
         style="
             margin: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #ffffff;
-            padding: 24px;
-            box-sizing: border-box;
-            font-family:
-                Inter,
-                -apple-system,
-                BlinkMacSystemFont,
-                &quot;Segoe UI&quot;,
-                Roboto,
-                Helvetica,
-                Arial,
-                sans-serif;
+            padding: 0;
+            background: #f4f4f5;
+            font-family: Arial, sans-serif;
         "
     >
-        <div
-            style="
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                max-width: 420px;
-                width: 100%;
-            "
+        <table
+            role="presentation"
+            width="100%"
+            cellspacing="0"
+            cellpadding="0"
+            style="background: #f4f4f5; padding: 32px 0"
         >
-            <div
-                style="
-                    width: 56px;
-                    height: 56px;
-                    border-radius: 9999px;
-                    background: #eef2ff;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin-bottom: 24px;
-                "
-            >
-                <svg
-                    viewBox="0 0 24 24"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    stroke="#4F7CFF"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
+            <tr>
+                <td align="center">
+                    <table
+                        role="presentation"
+                        width="600"
+                        cellspacing="0"
+                        cellpadding="0"
+                        style="
+                            background: #ffffff;
+                            border-radius: 8px;
+                            overflow: hidden;
+                        "
+                    >
+                        <tr>
+                            <td align="center" style="padding: 48px 40px">
+                                <div
+                                    style="
+                                        width: 56px;
+                                        height: 56px;
+                                        margin: 0 auto 24px;
+                                        border-radius: 9999px;
+                                        background: #eef2ff;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                    "
+                                >
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        width="24"
+                                        height="24"
+                                        fill="none"
+                                        stroke="#4F7CFF"
+                                        stroke-width="2.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <polyline
+                                            points="20 6 9 17 4 12"
+                                        ></polyline>
+                                    </svg>
+                                </div>
 
-            <p
-                style="
-                    margin: 0 0 8px;
-                    font-size: 22px;
-                    font-weight: 600;
-                    letter-spacing: -0.02em;
-                    color: #111111;
-                "
-            >
-                Email verified
-            </p>
+                                <h1
+                                    style="
+                                        margin: 0 0 12px;
+                                        color: #111827;
+                                        font-size: 24px;
+                                        font-weight: 600;
+                                    "
+                                >
+                                    Email verified
+                                </h1>
 
-            <p
-                style="
-                    margin: 0 0 32px;
-                    font-size: 14px;
-                    line-height: 1.5;
-                    color: #9ca3af;
-                "
-            >
-                Your account is ready. You can now open the application.
-            </p>
+                                <p
+                                    style="
+                                        margin: 0 0 32px;
+                                        color: #6b7280;
+                                        font-size: 16px;
+                                        line-height: 1.6;
+                                    "
+                                >
+                                    Your account has been successfully verified.
+                                    You can now open AiDoc and start using your
+                                    account.
+                                </p>
 
-            <a
-                href="{{WEB_URL}}"
-                style="
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    height: 44px;
-                    padding: 0 24px;
-                    border-radius: 12px;
-                    background: #4f7cff;
-                    color: #ffffff;
-                    text-decoration: none;
-                    font-size: 14px;
-                    font-weight: 500;
-                    box-shadow: 0 2px 8px rgba(79, 124, 255, 0.3);
-                    box-sizing: border-box;
-                "
-            >
-                Open AiDoc
-            </a>
-        </div>
+                                <a
+                                    href="{{WEB_URL}}"
+                                    style="
+                                        display: inline-block;
+                                        padding: 14px 24px;
+                                        background: #4f7cff;
+                                        color: #ffffff;
+                                        text-decoration: none;
+                                        font-size: 14px;
+                                        font-weight: 600;
+                                        border-radius: 12px;
+                                    "
+                                >
+                                    Open AiDoc
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td
+                                style="
+                                    padding: 24px 40px;
+                                    background: #f9fafb;
+                                    color: #6b7280;
+                                    font-size: 13px;
+                                    line-height: 1.5;
+                                    text-align: center;
+                                "
+                            >
+                                <p style="margin: 0 0 8px">
+                                    Need help? Contact us at
+                                    <a
+                                        href="mailto:support@aidoc.it.com"
+                                        style="color: #2563eb"
+                                    >
+                                        support@aidoc.it.com
+                                    </a>
+                                </p>
+
+                                <p style="margin: 0 0 8px">
+                                    Website:
+                                    <a
+                                        href="https://aidoc.it.com"
+                                        style="color: #2563eb"
+                                    >
+                                        https://aidoc.it.com
+                                    </a>
+                                </p>
+
+                                <p style="margin: 0">
+                                    © 2026 AIDoc. All rights reserved.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
     </body>
 </html>

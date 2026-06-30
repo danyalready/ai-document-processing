@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Verify your email</title>
+    </head>
+    <body
+        style="
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f5;
+            font-family: Arial, sans-serif;
+        "
+    >
+        <table
+            role="presentation"
+            width="100%"
+            cellspacing="0"
+            cellpadding="0"
+            style="background-color: #f4f4f5; padding: 32px 0"
+        >
+            <tr>
+                <td align="center">
+                    <table
+                        role="presentation"
+                        width="600"
+                        cellspacing="0"
+                        cellpadding="0"
+                        style="
+                            background: #ffffff;
+                            border-radius: 8px;
+                            overflow: hidden;
+                        "
+                    >
+                        <tr>
+                            <td style="padding: 32px 40px 16px 40px">
+                                <h1
+                                    style="
+                                        margin: 0;
+                                        color: #111827;
+                                        font-size: 24px;
+                                    "
+                                >
+                                    AIDoc
+                                </h1>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td
+                                style="
+                                    padding: 0 40px 24px 40px;
+                                    color: #374151;
+                                    font-size: 16px;
+                                    line-height: 1.6;
+                                "
+                            >
+                                <p>Hello {{FULL_NAME}},</p>
+
+                                <p>
+                                    Thank you for creating an account with
+                                    <strong>AIDoc</strong>.
+                                </p>
+
+                                <p>
+                                    To complete your registration, please verify
+                                    your email address by opening the link
+                                    below:
+                                </p>
+
+                                <p style="word-break: break-all">
+                                    <a
+                                        href="{{VERIFICATION_URL}}"
+                                        style="color: #2563eb"
+                                    >
+                                        {{VERIFICATION_URL}}
+                                    </a>
+                                </p>
+
+                                <p>
+                                    This verification link may expire after a
+                                    period of time for security reasons.
+                                </p>
+
+                                <hr
+                                    style="
+                                        border: none;
+                                        border-top: 1px solid #e5e7eb;
+                                        margin: 32px 0;
+                                    "
+                                />
+
+                                <p>
+                                    <strong
+                                        >Why did you receive this email?</strong
+                                    >
+                                </p>
+
+                                <p>
+                                    Someone recently created an AIDoc account
+                                    using this email address. If that was you,
+                                    please complete the verification process.
+                                </p>
+
+                                <p>
+                                    If you did not create an account, you can
+                                    safely ignore this message. No further
+                                    action is required.
+                                </p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td
+                                style="
+                                    padding: 24px 40px;
+                                    background: #f9fafb;
+                                    color: #6b7280;
+                                    font-size: 13px;
+                                    line-height: 1.5;
+                                "
+                            >
+                                <p style="margin: 0 0 8px 0">
+                                    Need help? Contact us at
+                                    <a
+                                        href="mailto:support@aidoc.it.com"
+                                        style="color: #2563eb"
+                                    >
+                                        support@aidoc.it.com
+                                    </a>
+                                </p>
+
+                                <p style="margin: 0 0 8px 0">
+                                    Website:
+                                    <a
+                                        href="https://aidoc.it.com"
+                                        style="color: #2563eb"
+                                    >
+                                        https://aidoc.it.com
+                                    </a>
+                                </p>
+
+                                <p style="margin: 0">
+                                    © 2026 AIDoc. All rights reserved.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
