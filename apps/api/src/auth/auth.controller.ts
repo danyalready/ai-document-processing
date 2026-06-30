@@ -8,6 +8,7 @@ import {
     Res,
     UseGuards,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { Response } from "express";
 
 import { AUTH_COOKIE_NAME } from "@app/shared";
@@ -19,7 +20,7 @@ import { ResendVerificationDto } from "./dto/resend-verification.dto";
 import { GoogleAuthGuard } from "./google-auth.guard";
 import { GithubAuthGuard } from "./github-auth.guard";
 import { JwtAuthGuard } from "./jwt-auth.guard";
-import { ConfigService } from "@nestjs/config";
+import { TemplateService } from "../template/template.service";
 
 const AUTH_COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -28,6 +29,7 @@ export class AuthController {
     constructor(
         private readonly config: ConfigService,
         private readonly authService: AuthService,
+        private readonly templateService: TemplateService,
     ) {}
 
     @Get("me")
@@ -54,15 +56,16 @@ export class AuthController {
     }
 
     @Get("verify-email")
-    async verifyEmail(
-        @Query("token") token: string,
-        @Res({ passthrough: true }) res: Response,
-    ) {
+    async verifyEmail(@Query("token") token: string, @Res() res: Response) {
         const result = await this.authService.verifyEmail(token);
 
         this.setAuthCookie(res, result.token);
 
-        return res.redirect(303, this.config.getOrThrow("WEB_URL"));
+        const html = this.templateService.renderEmailVerified(
+            this.config.getOrThrow("WEB_URL"),
+        );
+
+        return res.status(200).type("html").send(html);
     }
 
     @Post("resend-verification")

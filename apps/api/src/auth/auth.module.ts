@@ -5,6 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserEntity } from "@app/shared";
 
 import { MailModule } from "../mail/mail.module";
+import { TemplateModule } from "../template/template.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { JwtStrategy } from "./jwt.strategy";
@@ -21,6 +22,7 @@ import { GithubStrategy } from "./github.strategy";
         }),
         TypeOrmModule.forFeature([UserEntity]),
         MailModule,
+        TemplateModule,
     ],
     controllers: [AuthController],
     providers: [AuthService, JwtStrategy, GoogleStrategy, GithubStrategy],
