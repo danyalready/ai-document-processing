@@ -54,6 +54,10 @@
             "terms": "Terms",
             "and": "and",
             "privacy": "Privacy Policy"
+        },
+
+        "messages": {
+            "verifyEmail": "Check your email to verify your account before signing in."
         }
     }
 }

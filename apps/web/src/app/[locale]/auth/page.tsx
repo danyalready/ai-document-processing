@@ -4,13 +4,13 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { OAUTH_URLS, providers } from "./oauth";
-import AuthForm from "./AuthForm";
+import AuthForm, { type Mode } from "./AuthForm";
 import OAuthButton from "./OAuthButton";
 
 export default function AuthScreen() {
     const t = useTranslations("Auth");
 
-    const [mode, setMode] = useState<"signin" | "signup">("signin");
+    const [mode, setMode] = useState<Mode>("signin");
 
     const [loading, setLoading] = useState<"google" | "github" | null>();
 
@@ -56,7 +56,7 @@ export default function AuthScreen() {
                 </div>
 
                 {/* Form */}
-                <AuthForm mode={mode} />
+                <AuthForm mode={mode} setMode={setMode} />
 
                 {/* Toggle */}
                 <p className="text-center text-[13px] text-[#9CA3AF] mt-6">
