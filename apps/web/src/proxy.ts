@@ -1,22 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
+import createMiddleware from "next-intl/middleware";
+
+import { routing } from "@/i18n/routing";
+
+const handleI18nRouting = createMiddleware(routing);
 
 export function proxy(req: NextRequest) {
-    const token = req.cookies.get("access_token");
-    const pathname = req.nextUrl.pathname;
+    const response = handleI18nRouting(req);
 
-    const isAuthPage = pathname === "/auth";
+    const token = req.cookies.get("access_token");
+
+    const { pathname } = req.nextUrl;
+
+    const pathnameWithoutLocale = pathname.replace(/^\/(en|ru)(?=\/|$)/, "");
+
+    const isAuthPage = pathnameWithoutLocale === "/auth";
 
     if (!token && !isAuthPage) {
-        return NextResponse.redirect(new URL("/auth", req.url));
+        return NextResponse.redirect(
+            new URL(`/${routing.defaultLocale}/auth`, req.url),
+        );
     }
 
     if (token && isAuthPage) {
-        return NextResponse.redirect(new URL("/", req.url));
+        return NextResponse.redirect(
+            new URL(`/${routing.defaultLocale}`, req.url),
+        );
     }
 
-    return NextResponse.next();
+    return response;
 }
 
 export const config = {
-    matcher: ["/", "/document/:path*", "/settings", "/auth"],
+    matcher: ["/", "/(en|ru)/:path*", "/((?!api|_next|.*\\..*).*)"],
 };

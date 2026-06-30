@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { NextIntlClientProvider } from "next-intl";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { getMessages } from "next-intl/server";
+
+import "../globals.css";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -18,17 +21,21 @@ export const metadata: Metadata = {
         "Upload, analyze, extract, summarize, and transform documents using AI.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const messages = await getMessages();
+
     return (
         <html
             lang="en"
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
         >
-            <body className="min-h-full flex flex-col">{children}</body>
+            <NextIntlClientProvider messages={messages}>
+                <body className="min-h-full flex flex-col">{children}</body>
+            </NextIntlClientProvider>
         </html>
     );
 }
