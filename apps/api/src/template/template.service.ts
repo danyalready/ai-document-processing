@@ -9,15 +9,12 @@ export class TemplateService implements OnModuleInit {
 
     async onModuleInit() {
         this.emailVerification = await readFile(
-            join(
-                process.cwd(),
-                "src/template/templates/email-verification.html",
-            ),
+            join(__dirname, "templates", "email-verification.html"),
             "utf8",
         );
 
         this.emailVerified = await readFile(
-            join(process.cwd(), "src/template/templates/email-verified.html"),
+            join(__dirname, "templates", "email-verified.html"),
             "utf8",
         );
     }
