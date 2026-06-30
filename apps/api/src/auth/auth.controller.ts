@@ -50,7 +50,7 @@ export class AuthController {
 
         this.setAuthCookie(res, result.token);
 
-        return res.redirect(301, this.config.getOrThrow("WEB_URL"));
+        return { message: "Logged in" };
     }
 
     @Get("verify-email")
@@ -62,7 +62,7 @@ export class AuthController {
 
         this.setAuthCookie(res, result.token);
 
-        return { message: "Email verified" };
+        return res.redirect(303, this.config.getOrThrow("WEB_URL"));
     }
 
     @Post("resend-verification")
