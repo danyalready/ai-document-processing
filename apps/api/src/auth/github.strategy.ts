@@ -43,10 +43,10 @@ export class GithubStrategy extends PassportStrategy(Strategy, "github") {
     }
 
     async getProfileEmail(accessToken: string): Promise<string | null> {
-        const response = await fetch("https://api.github.com/user", {
+        const response = await fetch("https://api.github.com/user/emails", {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
-                Accept: "application/json",
+                Accept: "application/vnd.github+json",
             },
         });
 
