@@ -87,10 +87,11 @@ export class AuthController {
         @Req() req: any,
         @Res({ passthrough: true }) res: Response,
     ) {
-        const { token } = await this.authService.loginWithGoogle(
-            req.user.googleId,
-            req.user.email,
-        );
+        const { token } = await this.authService.loginWithGoogle({
+            googleId: req.user.googleId,
+            fullName: req.user.fullName,
+            email: req.user.email,
+        });
 
         this.setAuthCookie(res, token);
 
@@ -107,10 +108,11 @@ export class AuthController {
         @Req() req: any,
         @Res({ passthrough: true }) res: Response,
     ) {
-        const { token } = await this.authService.loginWithGithub(
-            req.user.githubId,
-            req.user.email,
-        );
+        const { token } = await this.authService.loginWithGithub({
+            githubId: req.user.githubId,
+            fullName: req.user.fullName,
+            email: req.user.email,
+        });
 
         this.setAuthCookie(res, token);
 

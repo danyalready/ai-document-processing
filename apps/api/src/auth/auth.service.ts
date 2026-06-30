@@ -160,7 +160,15 @@ export class AuthService {
         });
     }
 
-    async loginWithGoogle(googleId: string, email: string) {
+    async loginWithGoogle({
+        googleId,
+        fullName,
+        email,
+    }: {
+        googleId: string;
+        fullName: string;
+        email: string;
+    }) {
         let user = await this.usersRepo.findOne({
             where: [{ googleId }, { email }],
         });
@@ -169,6 +177,7 @@ export class AuthService {
             user = this.usersRepo.create({
                 email,
                 googleId,
+                fullName,
                 isEmailVerified: true,
             });
 
@@ -180,7 +189,15 @@ export class AuthService {
         return { token };
     }
 
-    async loginWithGithub(githubId: string, email: string) {
+    async loginWithGithub({
+        githubId,
+        fullName,
+        email,
+    }: {
+        githubId: string;
+        fullName: string;
+        email: string;
+    }) {
         let user = await this.usersRepo.findOne({
             where: [{ githubId }, { email }],
         });
@@ -189,6 +206,7 @@ export class AuthService {
             user = this.usersRepo.create({
                 email,
                 githubId,
+                fullName,
                 isEmailVerified: true,
             });
 
