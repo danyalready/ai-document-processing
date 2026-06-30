@@ -19,12 +19,16 @@ import { ResendVerificationDto } from "./dto/resend-verification.dto";
 import { GoogleAuthGuard } from "./google-auth.guard";
 import { GithubAuthGuard } from "./github-auth.guard";
 import { JwtAuthGuard } from "./jwt-auth.guard";
+import { ConfigService } from "@nestjs/config";
 
 const AUTH_COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 @Controller("auth")
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(
+        private readonly config: ConfigService,
+        private readonly authService: AuthService,
+    ) {}
 
     @Get("me")
     @UseGuards(JwtAuthGuard)
@@ -46,7 +50,7 @@ export class AuthController {
 
         this.setAuthCookie(res, result.token);
 
-        return { message: "Logged in" };
+        return res.redirect(301, this.config.getOrThrow("WEB_URL"));
     }
 
     @Get("verify-email")
