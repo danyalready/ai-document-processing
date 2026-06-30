@@ -1,9 +1,59 @@
 {
     "Auth": {
-        "title": "Welcome back",
-        "subtitle": "Sign in to continue",
-        "email": "Email",
-        "password": "Password",
-        "login": "Sign in"
+        "title": {
+            "signin": "Welcome back",
+            "signup": "Create your account"
+        },
+
+        "subtitle": {
+            "signin": "Sign in to continue to AiDoc",
+            "signup": "Start analyzing documents in seconds"
+        },
+
+        "fields": {
+            "name": {
+                "label": "Full name",
+                "placeholder": "John Doe"
+            },
+            "email": {
+                "label": "Email",
+                "placeholder": "Email address"
+            },
+            "password": {
+                "label": "Password",
+                "placeholder": "Password"
+            }
+        },
+
+        "oauth": {
+            "google": "Continue with Google",
+            "github": "Continue with GitHub"
+        },
+
+        "divider": "or",
+
+        "actions": {
+            "signIn": "Sign in",
+            "createAccount": "Create account",
+            "forgotPassword": "Forgot?"
+        },
+
+        "toggle": {
+            "signin": {
+                "text": "Don't have an account?",
+                "action": "Sign up"
+            },
+            "signup": {
+                "text": "Already have an account?",
+                "action": "Sign in"
+            }
+        },
+
+        "terms": {
+            "prefix": "By creating an account you agree to our",
+            "terms": "Terms",
+            "and": "and",
+            "privacy": "Privacy Policy"
+        }
     }
 }

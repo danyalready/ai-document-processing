@@ -1,14 +1,25 @@
+import { ReactNode } from "react";
+
 import { Spinner } from "@/shared/components/ui";
 
-export default function OAuthButton() {
+interface Props {
+    provider: "google" | "github";
+    text: string;
+    icon: ReactNode;
+    loading: boolean;
+    onClick: () => void;
+}
+
+export default function OAuthButton({ text, icon, loading, onClick }: Props) {
     return (
         <button
-            onClick={() => handleOAuth("google")}
-            disabled={!!loading}
-            className="w-full h-11 rounded-xl border border-[#E5E7EB] bg-white flex items-center justify-center gap-3 text-[14px] font-medium text-[#111111] hover:bg-[#F8F9FA] transition-colors disabled:opacity-60"
+            type="button"
+            onClick={onClick}
+            disabled={loading}
+            className="flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-[#E5E7EB] bg-white text-sm font-medium text-[#111111] transition-colors hover:bg-[#F8F9FA] disabled:opacity-60"
         >
-            {loading === "google" ? <Spinner /> : <ChromeIcon />}
-            Continue with Google
+            {loading ? <Spinner /> : icon}
+            {text}
         </button>
     );
 }

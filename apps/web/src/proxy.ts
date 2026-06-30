@@ -16,16 +16,15 @@ export function proxy(req: NextRequest) {
 
     const isAuthPage = pathnameWithoutLocale === "/auth";
 
+    const locale =
+        pathname.match(/^\/(en|ru)(?=\/|$)/)?.[1] ?? routing.defaultLocale;
+
     if (!token && !isAuthPage) {
-        return NextResponse.redirect(
-            new URL(`/${routing.defaultLocale}/auth`, req.url),
-        );
+        return NextResponse.redirect(new URL(`/${locale}/auth`, req.url));
     }
 
     if (token && isAuthPage) {
-        return NextResponse.redirect(
-            new URL(`/${routing.defaultLocale}`, req.url),
-        );
+        return NextResponse.redirect(new URL(`/${locale}`, req.url));
     }
 
     return response;
