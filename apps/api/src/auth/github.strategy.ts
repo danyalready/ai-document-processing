@@ -56,9 +56,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, "github") {
             );
         }
 
-        const { user: emails } = (await response.json()) as {
-            user: GithubEmail[];
-        };
+        const emails = (await response.json()) as GithubEmail[];
 
         const primary = emails.find((email) => email.primary && email.verified);
 
